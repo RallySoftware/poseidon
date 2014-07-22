@@ -74,22 +74,22 @@ module Poseidon
     # Raised when you try to send messages to a producer
     # object that has been #shutdown
     class ProducerShutdownError < StandardError; end
+  end
 
-    def self.logger
-      @loggger ||= null_logger
-    end
+  def self.logger
+    @loggger ||= null_logger
+  end
 
-    def self.logger=(logger)
-      @logger = logger
-    end
+  def self.logger=(logger)
+    @logger = logger
+  end
 
-    private
-    def self.null_logger
-      devnull = RUBY_PLATFORM =~ /w32/ ? 'nul' : '/dev/null'
-      l = Logger.new(devnull)
-      l.level = Logger::INFO
-      l
-    end
+  private
+  def self.null_logger
+    devnull = RUBY_PLATFORM =~ /w32/ ? 'nul' : '/dev/null'
+    l = Logger.new(devnull)
+    l.level = Logger::INFO
+    l
   end
 end
 
