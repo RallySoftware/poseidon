@@ -77,7 +77,7 @@ module Poseidon
   end
 
   def self.logger
-    @loggger ||= null_logger
+    @logger ||= null_logger
   end
 
   def self.logger=(logger)
