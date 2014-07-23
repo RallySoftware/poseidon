@@ -16,7 +16,6 @@ module Poseidon
     def fetch_metadata(topics)
       @seed_brokers.each do |broker|
         if metadata = fetch_metadata_from_broker(broker, topics)
-          Poseidon.logger.debug { "Fetched metadata\n" + metadata.to_s }
           return metadata
         end
       end

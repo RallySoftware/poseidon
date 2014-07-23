@@ -19,6 +19,8 @@ module Poseidon
       update_brokers(topic_metadata_response.brokers)
       update_topics(topic_metadata_response.topics)
 
+      Poseidon.logger.debug { "Updated cluster metadata\n" + self.to_s }
+
       @last_refreshed_at = Time.now
       nil
     end
