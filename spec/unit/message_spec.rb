@@ -118,9 +118,48 @@ describe Message do
     end
   end
 
-  it "decompresses a compressed value"
+  context "decompresses a compressed value" do
+    it "gzip" do
+      s = "I'm all compressed and shit"
 
-  it "raises an error if you try to decompress an uncompressed value"
+      gzipped = Compression::GzipCodec.compress s
+      m = Message.new value: gzipped, key: "key", topic: "topic", attributes: 1
+
+      req_buf = Protocol::RequestBuffer.new
+      m.write(req_buf)
+      
+      resp_buf = Protocol::ResponseBuffer.new(req_buf.to_s)
+      
+      expect(Message.read(resp_buf).decompressed_value).to eq(s.force_encoding("ASCII-8BIT"))
+    end
+
+    it "gzip" do
+      s = "I'm all compressed and shit"
+
+      gzipped = Compression::SnappyCodec.compress s
+      m = Message.new value: gzipped, key: "key", topic: "topic", attributes: 2
+
+      req_buf = Protocol::RequestBuffer.new
+      m.write(req_buf)
+      
+      resp_buf = Protocol::ResponseBuffer.new(req_buf.to_s)
+      
+      expect(Message.read(resp_buf).decompressed_value).to eq(s.force_encoding("ASCII-8BIT"))
+    end
+  end
+
+  it "raises an error if you try to decompress an uncompressed value" do
+    s = "I'm not compressed"
+    
+    m = Message.new value: s, key: "key", topic: "topic"
+
+    req_buf = Protocol::RequestBuffer.new
+    m.write(req_buf)
+    
+    resp_buf = Protocol::ResponseBuffer.new(req_buf.to_s)
+    
+    expect { Message.read(resp_buf).decompressed_value }.to raise_error Poseidon::Compression::UnrecognizedCompressionCodec
+  end
 
   describe "#write" do
     it 'writes a MessageWithOffsetStruct to the request buffer' do

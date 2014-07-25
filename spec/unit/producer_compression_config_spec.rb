@@ -21,6 +21,13 @@ describe ProducerCompressionConfig do
     end
   end
 
+  describe "compression codec no topics specified" do
+    it "compresses any topic" do
+      pcc = ProducerCompressionConfig.new(:snappy,nil)
+      expect(pcc.compression_codec_for_topic("test")).to eq(Compression::SnappyCodec)
+    end
+  end
+
   describe "compression codec set, but only compress 'compressed' topic" do
     it "compresses 'compressed' topic" do
       pcc = ProducerCompressionConfig.new(:gzip, ["compressed"])

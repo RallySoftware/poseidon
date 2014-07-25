@@ -77,6 +77,13 @@ module Poseidon
   end
 end
 
+# Optional Snappy Dependency
+begin
+  require "snappy"
+rescue LoadError
+  nil
+end
+
 # Public API
 require "poseidon/message_to_send"
 require "poseidon/producer"
